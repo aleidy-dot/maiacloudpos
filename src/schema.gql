@@ -1,0 +1,35 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Producto {
+  id: Int!
+  nombre: String
+  description: String
+  cantidadPresentacion: Int!
+  precio: Float
+  codigo: String
+  Iva: Float
+  imagen: String
+  descmaxprod: Float!
+}
+
+type Query {
+  producto(id: Int!): Producto!
+  findAll: [Producto!]!
+}
+
+type Mutation {
+  createItem(input: ProductoInput!): Producto!
+}
+
+input ProductoInput {
+  nombre: String
+  description: String
+  cantidadPresentacion: Int!
+  precio: Float
+  codigo: String
+  Iva: Float
+  imagen: String
+  descmaxprod: Float!
+}

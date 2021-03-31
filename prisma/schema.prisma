@@ -1,0 +1,144 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Cliente {
+  id         Int       @id @default(autoincrement())
+  name       String
+  email      String
+  telefono   String
+  address    String
+  facturas   Factura[]
+  created_at DateTime  @default(now())
+  updated_at DateTime  @default(now())
+}
+
+model Factura {
+  id                 Int            @id @default(autoincrement())
+  invoiceNo          String
+  description        String
+  taxRate            Int
+  issueDate          String
+  dueDate            String
+  note               String
+  taxAmount          Int
+  subTotal           Int
+  total              String
+  amountPaid         Int
+  outstandingBalance Int
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @default(now())
+  Cliente            Cliente?       @relation(fields: [clienteId], references: [id])
+  clienteId          Int?
+  lineasFactura      LineaFactura[]
+}
+
+model Producto {
+  id                      Int                     @id @default(autoincrement())
+  nombre                  String?
+  description             String
+  cantidadPresentacion    Int
+  precio                  Int
+  codigo                  String
+  Iva                     Int
+  imagen                  String
+  descmaxprod             Float
+  productoCodigos         ProductoCodigo[]
+  lotes                   Lote[]
+  productoImagenes        ProductoImagen[]
+  productoPrecios         ProductoPrecio[]
+  productoCaracteristicas ProductoCaracteristca[]
+  ProductoCategoria       ProductoCategoria?      @relation(fields: [productoCategoriaId], references: [id])
+  productoCategoriaId     Int?
+  MarcaLinea              MarcaLinea?             @relation(fields: [marcaLineaId], references: [id])
+  marcaLineaId            Int?
+  Marca                   Marca?                  @relation(fields: [marcaId], references: [id])
+  marcaId                 Int?
+  lineaFactra             LineaFactura?
+}
+
+model ProductoCodigo {
+  id            Int       @id @default(autoincrement())
+  codigo        String
+  codigoInterno String
+  Producto      Producto? @relation(fields: [productoId], references: [id])
+  productoId    Int?
+}
+
+model Lote {
+  id               Int       @id @default(autoincrement())
+  codigo           String
+  fechaVencimiento DateTime
+  Producto         Producto? @relation(fields: [productoId], references: [id])
+  productoId       Int?
+}
+
+model ProductoImagen {
+  id         Int       @id @default(autoincrement())
+  ruta       String
+  Producto   Producto? @relation(fields: [productoId], references: [id])
+  productoId Int?
+}
+
+model ProductoPrecio {
+  id     Int   @id @default(autoincrement())
+  precio Float
+
+  Producto   Producto? @relation(fields: [productoId], references: [id])
+  productoId Int?
+}
+
+model ProductoCaracteristca {
+  id        Int        @id @default(autoincrement())
+  productos Producto[]
+  nombre    String
+  valor     Boolean
+
+}
+
+model ProductoCategoria {
+  id        Int        @id @default(autoincrement())
+  productos Producto[]
+  nombre    String
+  valor     Boolean
+}
+
+model MarcaLinea {
+  id        Int        @id @default(autoincrement())
+  productos Producto[]
+  nombre    String
+  valor     Boolean
+  Marca     Marca?     @relation(fields: [marcaId], references: [id])
+  marcaId   Int?
+}
+
+model Marca {
+  id          Int          @id @default(autoincrement())
+  productos   Producto[]
+  nombre      String
+  telefono    Int
+  email       String
+  marcaLIneas MarcaLinea[]
+}
+
+model LineaFactura {
+  id       Int     @id @default(autoincrement())
+  cantidad Int
+  Total    Decimal
+
+  Factura   Factura? @relation(fields: [facturaId], references: [id])
+  facturaId Int?
+
+  producto   Producto @relation(fields: [productoId], references: [id])
+  productoId Int
+
+}
+
